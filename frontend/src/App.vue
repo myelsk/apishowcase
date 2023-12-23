@@ -1,12 +1,11 @@
 <template>
   <div class="container">
-    <Project :key="componentKey" @forceRerender="forceRerender()" />
+    <Project />
   </div>
 </template>
 <script>
 
   import Project from './components/Project.vue';
-  import ApiService from "./services/ApiService";
 
   export default {
     components: {

@@ -24,7 +24,7 @@ class ProjectController extends Controller
 
     public function destroyProject(Request $request, $id) {
         DB::table('projects')->where('id', '=', $id)->delete();
-        DB::table('tasks')->where('project_id', '=', $request->input('id'))->delete();
+        DB::table('tasks')->where('project_id', '=', $id)->delete();
     }
 
     public function putProject(Request $request, $id) {
@@ -42,5 +42,17 @@ class ProjectController extends Controller
         $task->isDone = false;
         $task->save();
         return response()->json([$task], 201);
+    }
+
+    public function getTasks() {
+        $tasks = DB::table('tasks')->get();
+        return response()->json(['tasks' => $tasks, 'status' => 200]);
+    }
+
+    public function toggleDone(Request $request, $id) {
+        $task = Task::find($id);
+        $task->isDone = !$task->isDone;
+        $task->save();
+        return response()->json($task, 200);
     }
 }

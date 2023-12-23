@@ -20,4 +20,6 @@ Route::delete('api/project/{id}', [ProjectController::class, 'destroyProject']);
 Route::put('api/project/{id}', [ProjectController::class, 'putProject']);
 
 Route::post('api/task', [ProjectController::class, 'postTask']);
+Route::get('api/tasks', [ProjectController::class, 'getTasks']);
+Route::put('api/task/{id}', [ProjectController::class, 'toggleDone']);
 

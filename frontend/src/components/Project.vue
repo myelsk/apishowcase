@@ -22,14 +22,14 @@
       </span>
       </div>
       <div class="add-task-block">
-      <span class="add-task-btn" @click="postTask(project.id)">
-      Add task
-    </span>
+      <span class="add-task-btn" @click="validateAndCreateTask(project.id)">
+        Add task
+      </span>
         <input type="text" class="task-title-input">
 
-        <ul class="tasks">
-          <ProjectTask :project_id="project.id" />
-        </ul>
+        <div class="tasks">
+          <ProjectTask :key="forceRerenderCount" :project_id="project.id" />
+        </div>
       </div>
 
       <div class="change-block">
@@ -49,12 +49,18 @@
 import Task from './ProjectTask.vue';
 import ApiService from "../services/ApiService";
 
-
 const server = new ApiService();
-var projectId;
 
 export default {
+  data() {
+    return {
+      forceRerenderCount: 0,
+    };
+  },
   methods: {
+    forceRerender: function() {
+      this.forceRerenderCount++;
+    },
     validateAndCreateProject: function() {
       let input = document.querySelector('.project-title-input');
       if (!input.value) {
@@ -109,14 +115,17 @@ export default {
       acceptButton.addEventListener("click", sendData);
 
     },
-    postTask: function(projectId) {
-      let input = document.querySelector(`.project-item[project-item-id='${projectId}'] .task-title-input`);
-      let response = server.postTask({project_id: projectId, name: input.value});
-      // response.then(function response(r) {
-      //   projectId = r.data[0].id;
-      //   input.value = '';
-      // });
-    }
+    validateAndCreateTask: function(projectId) {
+      let input = document.querySelector(`.project-item[project-item-id='${projectId}'] .task-title-input`);;
+      if (!input.value) {
+        input.classList.add('invalid');
+      } else {
+        input.classList.remove('invalid');
+        this.$store.dispatch('postTask', {name: input.value, project_id: projectId});
+        input.value = '';
+        this.forceRerender();
+      }
+    },
   },
   computed: {
     projects() {
@@ -126,12 +135,6 @@ export default {
   created() {
     this.$store.dispatch('loadProjects');
   },
-  // updated() {
-  //   let project = document.querySelector('.projects > .project-item');
-  //   if (!project.hasAttribute('project-item-id')) {
-  //     this.$store.dispatch('loadProjects');
-  //   }
-  // },
   components: {
     'ProjectTask': Task
   }

@@ -22,6 +22,9 @@ const store = createStore({
         PUSH_PROJECT(state, project) {
             state.projects.push(project);
         },
+        PUSH_TASK(state, task) {
+            state.tasks.push(task);
+        },
         REMOVE_PROJECT(state, projectId) {
             state.projects.forEach((item, index) => {
                 if (item.id === projectId) {
@@ -46,10 +49,19 @@ const store = createStore({
             server.destroyProject(projectId);
             commit('REMOVE_PROJECT', projectId);
         },
-        loadTasks({commit}) {
-            server.getProjects().then(result => {
-                commit('SAVE_PROJECTS', result.data)
+        postTask({commit}, data) {
+            let response = server.postTask(data);
+            response.then(function response(r) {
+                commit('PUSH_TASK', {project_id: r.data.project_id, name: r.data.name, isDone: false, id: r.data.id});
             });
+        },
+        loadTasks({commit}) {
+            server.getTasks().then(result => {
+                commit('SAVE_TASKS', result.data.tasks)
+            });
+        },
+        toggleDone({commit}, taskId) {
+            server.toggleDone(taskId);
         }
     },
 });

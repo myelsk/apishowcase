@@ -22,4 +22,12 @@ export default class ApiService {
     async postTask(data) {
         return await axios.post(`${baseUrl}/task`, data);
     }
+
+    async getTasks() {
+        return await axios.get(`${baseUrl}/tasks`)
+    }
+
+    async toggleDone(taskId) {
+        return await axios.put(`${baseUrl}/task/${taskId}`)
+    }
 }
