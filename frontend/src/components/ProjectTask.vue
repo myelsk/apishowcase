@@ -11,9 +11,6 @@
 
 export default {
   props: ['project_id'],
-  updated() {
-    this.$store.dispatch('loadTasks');
-  },
   created() {
     this.$store.dispatch('loadTasks');
   },
