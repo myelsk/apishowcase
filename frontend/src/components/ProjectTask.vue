@@ -44,8 +44,4 @@ export default {
     margin-left: 10px;
     color: #000;
   }
-
-  .task-done {
-    text-decoration: line-through;
-  }
 </style>
