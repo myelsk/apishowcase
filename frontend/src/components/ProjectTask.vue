@@ -12,7 +12,7 @@
 export default {
   props: ['project_id'],
   created() {
-    this.$store.dispatch('loadTasks');
+    setTimeout(() => this.$store.dispatch('loadTasks'), 500);
   },
   computed: {
     tasks() {
